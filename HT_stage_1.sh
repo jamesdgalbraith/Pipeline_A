@@ -7,7 +7,7 @@ mkdir -p data out/aligned
 vsearch --cluster_size ${QUERY} --id 0.8 --centroids ${QUERY}.centroids
 
 ### split query into pieces for faster search
-Rscript ~/projectDrive_2/DDE_Pipeline_2/splitter.R -f ${QUERY}.centroids -p ${THREADS} -t DNA
+Rscript splitter.R -f ${QUERY}.centroids -p ${THREADS} -t DNA
 ls split/${QUERY}.centroids_seq_* > split_seq_list.txt
 sed 's/.*\///' split_seq_list.txt -i
 

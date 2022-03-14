@@ -4,19 +4,39 @@ library("plyranges")
 library("BSgenome")
 
 flank_len <- 1500
-threads <- 64
+
+# parse input variables
+option_list = list(
+  make_option(c("-q", "--query"), type="character", default=NULL, 
+              help="repeat files", metavar="character"),
+  make_option(c("-t", "--threads"), type="character", default=NULL, 
+              help="number of threads to use", metavar="character"),
+  make_option(c("-g", "--genome"), type="character", default="NULL", 
+              help="genome file name", metavar="character"),
+  make_option(c("-o", "--outgroup"), type="character", default="NULL", 
+              help="outgroup genome file name", metavar="character")
+  
+)
+
+opt_parser = OptionParser(option_list=option_list)
+opt = parse_args(opt_parser)
+
+query <- opt$query
+genome_name <- opt$genome
+outgroup_name <- opt$outgroup
+threads <- opt$threads
 
 # read in query seq
-query_seq <- Biostrings::readDNAStringSet(filepath = "latCol_rm.fa.centroids")
+query_seq <- Biostrings::readDNAStringSet(filepath = paste0(query, ".centroids"))
 query_tbl <- tibble(seqnames = base::names(query_seq), start = 0, end = BiocGenerics::width(query_seq))
 
 # read in genome searches, remove small hits, satellites and simple repeats
-self_blast_out <- readr::read_tsv(file = paste0("data/latCol_rm.fa.centroids_latCor_2.0.fasta.out"),
+self_blast_out <- readr::read_tsv(file = paste0("data/", query, ".centroids_", genome_name, ".out"),
                                       col_names = c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
                                                     "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen")) %>%
   filter(length >= 0.1 * qlen, !grepl("Simple_repeat", qseqid), !grepl("Satellite", qseqid))
 
-outgroup_blast_out <- readr::read_tsv(file = paste0("data/latCol_rm.fa.centroids_TS10Xv2-PRI.fasta.out"),
+outgroup_blast_out <- readr::read_tsv(file = paste0("data/", query, ".centroids_", outgroup_name, ".out"),
                              col_names = c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
                                            "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen")) %>%
   filter(length >= 0.1 * qlen, !grepl("Simple_repeat", qseqid), !grepl("Satellite", qseqid))
@@ -70,7 +90,7 @@ if(nrow(ht_candidates_tbl) < 1){
 ht_candidate_seq <- query_seq[sub(" .*", "", names(query_seq)) %in% ht_candidates_tbl$qseqid]
 
 # prepare for manual curation
-for_curation_out <- readr::read_tsv(file = paste0("data/latCol_rm.fa.centroids_latCor_2.0.fasta.out"),
+for_curation_out <- readr::read_tsv(file = paste0("data/latCol_rm.fa.centroids_", genome_name, ".out"),
                                   col_names = c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
                                                 "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen")) %>%
   filter(length >= 0.1 * qlen, qseqid %in% ht_candidates_tbl$qseqid, pident >= 90) %>%
@@ -108,4 +128,7 @@ for(i in 1:nrow(ht_candidates_tbl)){
   
   # align
   system(paste0("mafft --thread ", threads, " --localpair out/temp.fa > out/aligned/", sub("/", "_", ht_candidates_tbl$qseqid[i]), ".fasta"))
+  
 }
+
+writeXStringSet(query_seq[names(query_seq) %in% ht_candidates_tbl$qseqid], "curated_latCol_rm.fasta")
