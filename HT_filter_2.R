@@ -1,8 +1,8 @@
 # read in packages
-library("tidyverse")
-library("plyranges")
-library("BSgenome")
-library("optparse")
+base::suppressPackageStartupMessages(library("tidyverse"))
+base::suppressPackageStartupMessages(base::library("plyranges"))
+base::suppressPackageStartupMessages(base::library("BSgenome"))
+base::suppressPackageStartupMessages(base::library("optparse"))
 
 # parse input variables
 option_list = list(
@@ -27,12 +27,14 @@ candidate_seq <- readDNAStringSet(query)
 # read in genome searches, remove small hits, satellites and simple repeats
 self_blast_out <- readr::read_tsv(file = paste0("data/", query, "_", genome_name, ".out"),
                                   col_names = c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
-                                                "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen")) %>%
+                                                "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"),
+                                  show_col_types = F) %>%
   filter(length >= 0.1 * qlen, !grepl("Simple_repeat", qseqid), !grepl("Satellite", qseqid))
 
 outgroup_blast_out <- readr::read_tsv(file = paste0("data/", query, "_", outgroup_name, ".out"),
                                       col_names = c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
-                                                    "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen")) %>%
+                                                    "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"),
+                                      show_col_types = F) %>%
   filter(length >= 0.1 * qlen, !grepl("Simple_repeat", qseqid), !grepl("Satellite", qseqid))
 
 # calculate average % identity of 10 best hits
@@ -76,4 +78,4 @@ ht_candidates_tbl <- dplyr::as_tibble(base::as.data.frame(base::table(ht_candida
 
 # select true candidates
 actual_candidate_seq <- candidate_seq[sub(" .*", "", names(candidate_seq)) %in% ht_candidates_tbl$qseqid]
-writeXStringSet(x = actual_candidate_seq, filepath = paste0("final_hit_", genome_name, "_candiates.fasta"))
+writeXStringSet(x = actual_candidate_seq, filepath = paste0("out/final_hit_", genome_name, "_candiates.fasta"))

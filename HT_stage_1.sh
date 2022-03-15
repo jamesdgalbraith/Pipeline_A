@@ -1,4 +1,8 @@
 #!/bin/bash
+# usage: GENOME=<source_genome> OUTGROUP=<outgroup_genome> QUERY=<file_containing_repeats> THREADS=<number of threads to use> bash HT_stage_1.sh
+
+export GENOME
+export OUTGROUP
 
 mkdir -p data out/aligned
 
@@ -25,6 +29,6 @@ rm data/${QUERY}.centroids_seq_*_${GENOME}.out data/${QUERY}.centroids_seq_*_${O
 echo $PATH > path.txt
 
 # Rscript to identify candidates and curate
-Rscript HT_filter_1.R --query ${QUERY} --genome ${GENOME} -outgroup ${OUTGROUP} --threads ${THREADS}
+Rscript HT_filter_1.R --query ${QUERY} --genome ${GENOME} --outgroup ${OUTGROUP} --threads ${THREADS}
 
 # perform manual curation
