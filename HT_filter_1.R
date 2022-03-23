@@ -51,10 +51,6 @@ outgroup_name <- opt$outgroup
 threads <- opt$threads
 flank_len <- opt$flank
 
-query <- "latCor_2.0.fasta-families.fa"
-genome_name <- "latCor_2.0.fasta"
-outgroup_name <- "TS10Xv2-PRI.fasta"
-threads <- 64
 flank_len <- 3000
 
 message("Reading data")
@@ -138,7 +134,7 @@ for_curation_out <- readr::read_tsv(file = paste0("data/", query, ".centroids_",
   dplyr::ungroup()
 
 # read in genome
-genome_seq <- readDNAStringSet("seq/latCor_2.0.fasta")
+genome_seq <- readDNAStringSet(paste0("seq/", genome_name))
 names(genome_seq) <- sub(" .*", "", names(genome_seq))
 
 for(i in 1:nrow(ht_candidates_tbl)){
