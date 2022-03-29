@@ -5,6 +5,8 @@ export GENOME
 export OUTGROUP
 
 mkdir -p data out/aligned
+makeblastdb -in seq/{GENOME} -dbtype nucl
+makeblastdb -in seq/{OUTGROUP} -dbtype nucl
 
 # search genomes (initial sweep)
 ### cluster query

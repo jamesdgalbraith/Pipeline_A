@@ -4,11 +4,11 @@ This simple pipeline is designed to identify potential horizontally transferred 
 
 Requirements: MAFFT, NCBI BLAST, R with tidyverse, plyranges, BSgenome and optranges packages installed
 
-All input files should be FASTA files. Raw repeats can be from any *ab initio* software package.
+All input files should be FASTA files. Raw repeats can be from any *ab initio* software package. Input genomes should be in `seq/` folder.
 
 Usage:
 
-0\) *Ab initio* TE annotation using RepeatModeller. Run HT_stage_0.sh
+0\) *Ab initio* TE annotation using RepeatModeler. Run HT_stage_0.sh
 
 ```bash
 GENOME=<source_genome> THREADS=<number of threads to use> bash HT_stage_0.sh 
