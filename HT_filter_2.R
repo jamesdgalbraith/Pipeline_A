@@ -5,18 +5,17 @@ base::suppressPackageStartupMessages(base::library("BSgenome"))
 base::suppressPackageStartupMessages(base::library("optparse"))
 
 # parse input variables
-option_list = list(
-  make_option(c("-q", "--query"), type="character", default=NULL, 
-              help="repeat files", metavar="character"),
-  make_option(c("-g", "--genome"), type="character", default="NULL", 
-              help="genome file name", metavar="character"),
-  make_option(c("-o", "--outgroup"), type="character", default="NULL", 
-              help="outgroup genome file name", metavar="character")
-  
+option_list <- list(
+  make_option(c("-q", "--query"), type = "character", default = NULL,
+              help = "repeat files", metavar = "character"),
+  make_option(c("-g", "--genome"), type = "character", default = "NULL",
+              help = "genome file name", metavar = "character"),
+  make_option(c("-o", "--outgroup"), type = "character", default = "NULL",
+              help = "outgroup genome file name", metavar = "character")
 )
 
-opt_parser = OptionParser(option_list=option_list)
-opt = parse_args(opt_parser)
+opt_parser <- OptionParser(option_list = option_list)
+opt <- parse_args(opt_parser)
 
 query <- opt$query
 genome_name <- opt$genome
@@ -67,7 +66,7 @@ pident_to_low <- search_joined %>%
   filter(self_pident > 90, outgroup_pident < 75)
 
 # step to kill if no candidates
-if(nrow(pident_to_low) == 0 & nrow(search_joined) == 0){
+if (nrow(pident_to_low) == 0 & nrow(search_joined) == 0) {
   stop("No HT candidates found")
 }
 

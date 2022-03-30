@@ -10,37 +10,33 @@ con <- file("path.txt")
 Sys.setenv(PATH = as.character(readLines(con)))
 close(con)
 # parse input variables
-option_list = list(
-  make_option(c("-q", "--query"), type="character", default=NULL, 
-              help="repeat files", metavar="character"),
-  make_option(c("-t", "--threads"), type="integer", default=parallel::detectCores(all.tests = FALSE, logical = TRUE),
-              help="number of threads to use (default is maximum available)", metavar="integer"),
-  make_option(c("-g", "--genome"), type="character", default=NULL, 
-              help="genome file name", metavar="character"),
-  make_option(c("-f", "--flank"), type="integer", default=1500, 
-              help="outgroup genome file name", metavar="integer"),
-  make_option(c("-o", "--outgroup"), type="character", default=NULL, 
-              help="outgroup genome file name", metavar="character")
-  
+option_list <- list(
+  make_option(c("-q", "--query"), type = "character", default = NULL,
+              help = "repeat files", metavar = "character"),
+  make_option(c("-t", "--threads"), type = "integer", default = parallel::detectCores(all.tests = FALSE, logical = TRUE),
+              help = "number of threads to use (default is maximum available)", metavar = "integer"),
+  make_option(c("-g", "--genome"), type = "character", default = NULL,
+              help = "genome file name", metavar = "character"),
+  make_option(c("-f", "--flank"), type = "integer", default = 1500,
+              help = "outgroup genome file name", metavar = "integer"),
+  make_option(c("-o", "--outgroup"), type = "character", default = NULL,
+              help = "outgroup genome file name", metavar = "character")
 )
 
 message("Parsing variables")
-opt_parser = OptionParser(option_list=option_list)
-opt = parse_args(opt_parser)
+opt_parser <- OptionParser(option_list = option_list)
+opt <- parse_args(opt_parser)
 
 # check variables are set
-if(is.null(opt$query) |
-   is.null(opt$genome) |
-   is.null(opt$outgroup)
-){
+if (is.null(opt$query) | is.null(opt$genome) | is.null(opt$outgroup)) {
   stop("Necessary variables have not been set.")
 }
 
 # check files exist
-if(!file.exists(paste0(opt$query, ".centroids")) |
-   !file.exists(paste0("data/", opt$query, ".centroids_", opt$genome, ".out")) |
-   !file.exists(paste0("data/", opt$query, ".centroids_", opt$outgroup, ".out"))
-   ){
+if (!file.exists(paste0(opt$query, ".centroids")) |
+    !file.exists(paste0("data/", opt$query, ".centroids_", opt$genome, ".out")) |
+    !file.exists(paste0("data/", opt$query, ".centroids_", opt$outgroup, ".out"))
+    ) {
   stop("Input file(s) are missing, ensure you have run the previous steps correctly")
 }
 
@@ -111,7 +107,7 @@ ht_candidates_tbl <- dplyr::as_tibble(base::as.data.frame(base::table(ht_candida
   dplyr::filter(n > 1)
 
 ### STEP TO KILL IF NO CANDIDATES ###
-if(nrow(ht_candidates_tbl) < 1){
+if (nrow(ht_candidates_tbl) < 1) {
   stop("No HT candidates found")
 }
 
@@ -137,7 +133,7 @@ for_curation_out <- readr::read_tsv(file = paste0("data/", query, ".centroids_",
 genome_seq <- readDNAStringSet(paste0("seq/", genome_name))
 names(genome_seq) <- sub(" .*", "", names(genome_seq))
 
-for(i in 1:nrow(ht_candidates_tbl)){
+for (i in 1:nrow(ht_candidates_tbl)) {
 
   message(paste0("Preparing ", i, " of ", nrow(ht_candidates_tbl)))
   for_curation_ranges <- for_curation_out %>%
@@ -163,7 +159,6 @@ for(i in 1:nrow(ht_candidates_tbl)){
                           col_names = c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
                                         "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"),
                           show_col_types = FALSE)
-  
   recip_blast_ranges <- recip_blast %>%
     filter(qseqid != sseqid) %>%
     dplyr::group_by(qseqid) %>%
@@ -175,10 +170,10 @@ for(i in 1:nrow(ht_candidates_tbl)){
     dplyr::rename(seqnames = qseqid) %>%
     base::unique() %>%
     plyranges::as_granges()
-  
+
   trimmed_curation_seq <- getSeq(for_curation_seq, recip_blast_ranges)
   names(trimmed_curation_seq) <- paste0(seqnames(recip_blast_ranges), ":", ranges(recip_blast_ranges))
-  
+
   # add original consensus
   trimmed_curation_seq <- c(query_seq[sub(" .*", "", names(query_seq)) == ht_candidates_tbl$qseqid[i]], trimmed_curation_seq)
 
