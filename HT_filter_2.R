@@ -67,7 +67,7 @@ pident_to_low <- search_joined %>%
 
 # step to kill if no candidates
 if (nrow(pident_to_low) == 0 & nrow(search_joined) == 0) {
-  stop("No HT candidates found")
+  stop("No HTT candidates found")
 }
 
 # select too divergent and missing from top 10
@@ -82,4 +82,4 @@ ht_candidates_tbl <- dplyr::as_tibble(base::as.data.frame(base::table(ht_candida
 
 # select true candidates
 actual_candidate_seq <- candidate_seq[sub(" .*", "", names(candidate_seq)) %in% ht_candidates_tbl$qseqid]
-writeXStringSet(x = actual_candidate_seq, filepath = paste0("out/final_HT_", genome_name, "_candiates.fasta"))
+writeXStringSet(x = actual_candidate_seq, filepath = paste0("out/final_HTT_", genome_name, "_candiates.fasta"))
