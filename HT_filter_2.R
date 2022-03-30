@@ -66,6 +66,11 @@ search_joined <- inner_join(x = (self_blast_out_top_10 %>%
 pident_to_low <- search_joined %>%
   filter(self_pident > 90, outgroup_pident < 75)
 
+# step to kill if no candidates
+if(nrow(pident_to_low) == 0 & nrow(search_joined) == 0){
+  stop("No HT candidates found")
+}
+
 # select too divergent and missing from top 10
 ht_candidates_top_10 <- self_blast_out_top_10 %>%
   filter((!qseqid %in% search_joined$qseqid | qseqid %in% pident_to_low$qseqid), av_pident >= 90)
