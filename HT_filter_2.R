@@ -82,4 +82,4 @@ ht_candidates_tbl <- dplyr::as_tibble(base::as.data.frame(base::table(ht_candida
 
 # select true candidates
 actual_candidate_seq <- candidate_seq[sub(" .*", "", names(candidate_seq)) %in% ht_candidates_tbl$qseqid]
-writeXStringSet(x = actual_candidate_seq, filepath = paste0("out/final_hit_", genome_name, "_candiates.fasta"))
+writeXStringSet(x = actual_candidate_seq, filepath = paste0("out/final_HT_", genome_name, "_candiates.fasta"))
