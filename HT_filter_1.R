@@ -17,7 +17,7 @@ option_list <- list(
               help = "number of threads to use (default is maximum available)", metavar = "integer"),
   make_option(c("-g", "--genome"), type = "character", default = NULL,
               help = "genome file name", metavar = "character"),
-  make_option(c("-f", "--flank"), type = "integer", default = 1500,
+  make_option(c("-f", "--flank"), type = "integer", default = 3000,
               help = "outgroup genome file name", metavar = "integer"),
   make_option(c("-o", "--outgroup"), type = "character", default = NULL,
               help = "outgroup genome file name", metavar = "character")
@@ -33,7 +33,7 @@ if (is.null(opt$query) | is.null(opt$genome) | is.null(opt$outgroup)) {
 }
 
 # check files exist
-if (!file.exists(paste0(opt$query, ".centroids")) |
+if (!file.exists(paste0("data/", opt$query, ".centroids")) |
     !file.exists(paste0("data/", opt$query, ".centroids_", opt$genome, ".out")) |
     !file.exists(paste0("data/", opt$query, ".centroids_", opt$outgroup, ".out"))
     ) {
@@ -47,11 +47,9 @@ outgroup_name <- opt$outgroup
 threads <- opt$threads
 flank_len <- opt$flank
 
-flank_len <- 3000
-
 message("Reading data")
 # read in query seq
-query_seq <- Biostrings::readDNAStringSet(filepath = paste0(query, ".centroids"))
+query_seq <- Biostrings::readDNAStringSet(filepath = paste0("data/",query, ".centroids"))
 query_tbl <- tibble(seqnames = base::names(query_seq), start = 0, end = BiocGenerics::width(query_seq))
 
 # read in genome searches, remove small hits, satellites and simple repeats

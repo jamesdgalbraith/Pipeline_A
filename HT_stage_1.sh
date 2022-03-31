@@ -10,10 +10,10 @@ makeblastdb -in genomes/{OUTGROUP} -dbtype nucl
 
 # search genomes (initial sweep)
 ### cluster query
-vsearch --cluster_size ${QUERY} --id 0.8 --centroids ${QUERY}.centroids
+vsearch --cluster_size ${QUERY} --id 0.8 --centroids data/${QUERY}.centroids
 
 ### split query into pieces for faster search
-Rscript splitter.R -f ${QUERY}.centroids -p ${THREADS} -t DNA
+Rscript splitter.R -f data/${QUERY}.centroids -p ${THREADS} -t DNA
 ls split/${QUERY}.centroids_seq_* | sed 's/.*\///' > split_seq_list.txt
 
 ### search genome in parallel. do for source and outgroup(s)
