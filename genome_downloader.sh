@@ -4,7 +4,7 @@
 mkdir -p genomes
 
 # get genome information
-esearch -db assembly -query '"Serpentes"[Organism] AND ("latest genbank"[filter] AND ("representative genome"[filter]  OR "representative genome"[filter]) AND all[filter] NOT anomalous[filter] AND ("100000"[ScaffoldN50] : "5000000000"[ScaffoldN50])' | \
+esearch -db assembly -query '("Serpentes"[Organism] OR "Echinodermata"[Organism]) AND ("latest genbank"[filter] AND ("representative genome"[filter]  OR "representative genome"[filter]) AND all[filter] NOT anomalous[filter] AND ("100000"[ScaffoldN50] : "5000000000"[ScaffoldN50])' | \
 esummary | xtract -pattern DocumentSummary -def "NA" -element Genbank,AssemblyName,Organism,FtpPath_GenBank | \
 sed 's/ /_/g;s/_(.*)//' | awk '{if ($4 ~ "ftp") print $0 "/"$1"_"$2"_genomic.fna.gz"}' | sed 's|ftp://|rsync://|' > updated_genome_info.txt
 

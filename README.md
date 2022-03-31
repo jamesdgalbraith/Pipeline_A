@@ -38,4 +38,13 @@ This script carries out a validation of the initial search using consensus seque
 bash GENOME=<name_of_source_species> OUTGROUPS=<file_containing_list_of_genomes> QUERY=<file_containing_curated_repeats> THREADS=<number of threads to use> bash HT_stage_2.sh
 ```
 
-This script searches for repeats verified as HTT candidates, searches for them in other species (from a list provided) and creates a MSA of each repeats if identified in a species ready for curation. This script is written to utilise genomes downloaded from Genbank and present in the `genomes/` folder and zipped. If necessary modify this script for your pariticular situation.
+This script searches for repeats verified as HTT candidates, searches for them in other species (from a list provided) and creates a MSA of each repeats if identified in a species ready for curation. This script is written to utilise genomes downloaded from Genbank and present in the `genomes/` folder and zipped. If necessary modify this script for your particular situation.
+
+
+### Example usage:
+1) run genome_downloader.sh to download all high quality snake and echinoderm genomes from GenBank (requires Entrez Direct)
+2) unzip Laticauda colubrina genome to use as source genome and Naja naja genome to use as outgroup
+3) run HT_stage_1.sh (example RepeatModeler output of Laticauda colubrina is in the data folder)
+4) manually curate potential HTT candidates
+5) run HT_stage_2.sh using curated HTT candidates
+6) run HT_stage_3.sh to examine other species in which HTT candidates are present in. With the example dataset several Harbingers identified in Laticauda colubrina will also be present in Laticauda laticaudata and various echinoderms

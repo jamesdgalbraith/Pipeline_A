@@ -58,7 +58,7 @@ for( i in 1:nrow(genome_list) ){
       for(j in 1:nrow(curation_list)){
         
         for_curation_ranges <- for_curation %>%
-          dplyr::filter(qseqid == curation_list$qseqid[j]) %>%
+          dplyr::filter(qseqid == curation_list$qseqid[j], length/qlen >= 0.3) %>%
           dplyr::mutate(start = ifelse(sstart < send, sstart - opt$flank, send - opt$flank),
                         end = ifelse(sstart > send, sstart + opt$flank, send + opt$flank),
                         strand = ifelse(sstart < send, "+", "-"),
