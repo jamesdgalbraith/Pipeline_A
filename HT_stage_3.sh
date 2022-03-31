@@ -3,18 +3,19 @@
 # OUTGROUPS files should have species names in column 1 and genome names in column b
 
 export GENOME
+export OUTGROUPS
 
-mkdir out/other_alignments
+mkdir -p out/other_alignments
 
-### make database of and search each genome, remove database
-while read a b; do
+# unzip fastas and make genome databases
+parallel --jobs 4 -a ${OUTGROUPS} --colsep="\t" 'gunzip < genomes/{2}_genomic.fna.gz > genomes/{2}.fasta'
+parallel --jobs 4 -a ${OUTGROUPS} --colsep="\t" 'makeblastdb -in genomes/{2}.fasta -dbtype nucl'
 
-  makeblastdb -in genomes/$b -dbtype nucl -out genomes/$a
-  blastn -query out/final_HTT_${GENOME}_candiates.fasta -db genomes/${a} -outfmt "6 std qlen slen" -task dc-megablast | \
-    awk '{if ($4/$13 > 0.1)}' > data/${GENOME}_candiates_in_${a}.out
-  rm genomes/$b.n*
+# search genomes for repeats
+parallel --jobs 8 -a ${OUTGROUPS} --colsep="\t" 'echo blastn -query out/final_HTT_${GENOME}_candiates.fasta -db genomes/{2}.fasta -outfmt "6 std qlen slen" -task dc-megablast -out data/${GENOME}_candiates_in_{1}.out'
 
-done<${OUTGROUPS}
+# remove database files
+rm genomes/*fasta*n*
 
 # Rscript to identify candidates
 Rscript HT_curator.R --genome ${GENOME} --outgroups ${OUTGROUPS} --threads ${THREADS}

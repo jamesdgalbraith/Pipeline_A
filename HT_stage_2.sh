@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: GENOME=<source_genome> OUTGROUP=<outgroup_genome> QUERY=<file_containing_curated_repeats> THREADS=<number of threads to use> bash HT_stage_2.sh 
+# usage: SPECIES=<name_of_source_species> GENOME=<source_genome> OUTGROUP=<outgroup_genome> QUERY=<file_containing_curated_repeats> THREADS=<number of threads to use> bash HT_stage_2.sh 
 
 export GENOME
 export OUTGROUP
@@ -21,4 +21,4 @@ cat data/${QUERY}_seq_*${OUTGROUP}.out > data/${QUERY}_${OUTGROUP}.out
 rm data/${QUERY}_seq_*.out split/${QUERY}_seq_*
 
 # Rscript to identify candidates
-Rscript HT_filter_2.R --genome ${GENOME} --outgroup ${OUTGROUP} --query ${QUERY}
+Rscript HT_filter_2.R --genome ${GENOME} --outgroup ${OUTGROUP} --query ${QUERY} --species ${SPECIES}

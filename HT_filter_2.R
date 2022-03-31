@@ -11,7 +11,9 @@ option_list <- list(
   make_option(c("-g", "--genome"), type = "character", default = "NULL",
               help = "genome file name", metavar = "character"),
   make_option(c("-o", "--outgroup"), type = "character", default = "NULL",
-              help = "outgroup genome file name", metavar = "character")
+              help = "outgroup genome file name", metavar = "character"),
+  make_option(c("-s", "--species"), type = "character", default = "NULL",
+              help = "name of query species for final output", metavar = "character")
 )
 
 opt_parser <- OptionParser(option_list = option_list)
@@ -82,4 +84,4 @@ ht_candidates_tbl <- dplyr::as_tibble(base::as.data.frame(base::table(ht_candida
 
 # select true candidates
 actual_candidate_seq <- candidate_seq[sub(" .*", "", names(candidate_seq)) %in% ht_candidates_tbl$qseqid]
-writeXStringSet(x = actual_candidate_seq, filepath = paste0("out/final_HTT_", genome_name, "_candiates.fasta"))
+writeXStringSet(x = actual_candidate_seq, filepath = paste0("out/final_HTT_", opt$species, "_candiates.fasta"))

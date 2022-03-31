@@ -4,7 +4,7 @@
 export GENOME
 export OUTGROUP
 
-mkdir -p data out/aligned
+mkdir -p data out/aligned seq genomes/
 makeblastdb -in genomes/{GENOME} -dbtype nucl
 makeblastdb -in genomes/{OUTGROUP} -dbtype nucl
 
