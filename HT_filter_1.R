@@ -130,7 +130,7 @@ for_curation_out <- readr::read_tsv(file = paste0("data/", query, ".centroids_",
   dplyr::ungroup()
 
 # read in genome
-genome_seq <- readDNAStringSet(paste0("seq/", genome_name))
+genome_seq <- readDNAStringSet(paste0("genomes/", genome_name))
 names(genome_seq) <- sub(" .*", "", names(genome_seq))
 
 for (i in 1:nrow(ht_candidates_tbl)) {

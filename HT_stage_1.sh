@@ -5,8 +5,8 @@ export GENOME
 export OUTGROUP
 
 mkdir -p data out/aligned
-makeblastdb -in seq/{GENOME} -dbtype nucl
-makeblastdb -in seq/{OUTGROUP} -dbtype nucl
+makeblastdb -in genomes/{GENOME} -dbtype nucl
+makeblastdb -in genomes/{OUTGROUP} -dbtype nucl
 
 # search genomes (initial sweep)
 ### cluster query
@@ -17,8 +17,8 @@ Rscript splitter.R -f ${QUERY}.centroids -p ${THREADS} -t DNA
 ls split/${QUERY}.centroids_seq_* | sed 's/.*\///' > split_seq_list.txt
 
 ### search genome in parallel. do for source and outgroup(s)
-parallel --bar --jobs ${THREADS} -a split_seq_list.txt 'blastn -query split/{} -db seq/${GENOME} -out data/{}_${GENOME}.out -outfmt "6 std qlen slen" -task dc-megablast'
-parallel --bar --jobs ${THREADS} -a split_seq_list.txt 'blastn -query split/{} -db seq/${OUTGROUP} -out data/{}_${OUTGROUP}.out -outfmt "6 std qlen slen" -task dc-megablast'
+parallel --bar --jobs ${THREADS} -a split_seq_list.txt 'blastn -query split/{} -db genomes/${GENOME} -out data/{}_${GENOME}.out -outfmt "6 std qlen slen" -task dc-megablast'
+parallel --bar --jobs ${THREADS} -a split_seq_list.txt 'blastn -query split/{} -db genomes/${OUTGROUP} -out data/{}_${OUTGROUP}.out -outfmt "6 std qlen slen" -task dc-megablast'
 
 ### compile blast out
 cat data/${QUERY}.centroids_seq_*${GENOME}.out > data/${QUERY}.centroids_${GENOME}.out

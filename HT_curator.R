@@ -55,7 +55,7 @@ for( i in 1:nrow(genome_list) ){
  
   curation_list <- for_curation %>% dplyr::select(qseqid) %>% base::unique
   
-  genome_seq <- readDNAStringSet(paste0("seq/", genome_list$genome_name[i]))
+  genome_seq <- readDNAStringSet(paste0("genomes/", genome_list$genome_name[i]))
   names(genome_seq) <- sub(" .*", "", names(genome_seq))
  
   for(j in 1:nrow(curation_list)){

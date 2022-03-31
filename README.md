@@ -4,7 +4,7 @@ This simple pipeline is designed to identify potential horizontally transferred 
 
 Requirements: MAFFT, NCBI BLAST, R with tidyverse, plyranges, BSgenome and optranges packages installed
 
-All input files should be FASTA files. Raw repeats can be from any *ab initio* software package. Input genomes should be in `seq/` folder.
+All input files should be FASTA files. Raw repeats can be from any *ab initio* software package. Input genomes should be in `genomes/` folder.
 
 Usage:
 

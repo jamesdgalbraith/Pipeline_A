@@ -9,10 +9,10 @@ mkdir out/other_alignments
 ### make database of and search each genome, remove database
 while read a b; do
 
-  makeblastdb -in seq/$b -dbtype nucl -out seq/$a
-  blastn -query out/final_HTT_${GENOME}_candiates.fasta -db seq/${a} -outfmt "6 std qlen slen" -task dc-megablast | \
+  makeblastdb -in genomes/$b -dbtype nucl -out genomes/$a
+  blastn -query out/final_HTT_${GENOME}_candiates.fasta -db genomes/${a} -outfmt "6 std qlen slen" -task dc-megablast | \
     awk '{if ($4/$13 > 0.1)}' > data/${GENOME}_candiates_in_${a}.out
-  rm seq/$b.n*
+  rm genomes/$b.n*
 
 done<${OUTGROUPS}
 

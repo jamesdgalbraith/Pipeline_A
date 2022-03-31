@@ -3,10 +3,10 @@
 
 # run RepeatModeler
 ### create database
-BuildDatabase -name seq/${GENOME} seq/${GENOME}
+BuildDatabase -name genomes/${GENOME} genomes/${GENOME}
 
 ### run repeatmodeler
-RepeatModeler -pa ${THREADS} -database seq/${GENOME}
+RepeatModeler -pa ${THREADS} -database genomes/${GENOME}
 
 ### remove database
-rm seq/${GENOME}.n* seq/${GENOME}.translation
+rm genomes/${GENOME}.n* genomes/${GENOME}.translation
